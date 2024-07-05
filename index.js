@@ -57,10 +57,10 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   newActivityToSave.save();
 
   const activityToDisplay = {
-    username: newActivity.username,
-    description: body.description,
-    duration: duration,
-    date: date.toDateString(),
+    username: user.username,
+    description: newActivityToSave.description,
+    duration: +newActivityToSave.duration,
+    date: new Date(newActivityToSave.date).toDateString(),
     _id: userId,
   };
 
