@@ -38,6 +38,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   const body = req.body;
   const userId = req.params._id;
   const date = body.date ? new Date(body.date) : new Date();
+  const duration = body.duration ? body.duration : 0;
   const user = await User.findById(userId);
 
   console.log(user);
@@ -46,7 +47,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   const newActivity = {
     description: body.description,
-    duration: body.duration,
+    duration: duration,
     date: date.toDateString(),
     userId: userId,
   };
@@ -66,7 +67,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   const userWithNewActivity = {
     ...user._doc,
     description: body.description,
-    duration: body.duration ? body.duration : 0,
+    duration: duration,
     date: date.toDateString(),
   };
 
