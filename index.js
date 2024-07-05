@@ -66,7 +66,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   const userWithNewActivity = {
     ...user._doc,
     description: body.description,
-    duration: body.duration,
+    duration: body.duration ? body.duration : 0,
     date: date.toDateString(),
   };
 
