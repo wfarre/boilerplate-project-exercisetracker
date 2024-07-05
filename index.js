@@ -68,7 +68,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     ...newActivity,
   };
 
-  res.send(activityToDisplay);
+  res.send(userWithNewActivity);
 });
 
 app.get("/api/users/:_id/exercises", async (req, res) => {
