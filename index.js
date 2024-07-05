@@ -63,12 +63,12 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     _id: userId,
   };
 
-  const userWithNewActivity = {
-    ...user._doc,
-    newActivity: activityToDisplay,
-  };
+  // const userWithNewActivity = {
+  //   ...user._doc,
+  //   newActivity: activityToDisplay,
+  // };
 
-  res.send(userWithNewActivity);
+  res.send(activityToDisplay);
 });
 
 app.get("/api/users/:_id/exercises", async (req, res) => {
