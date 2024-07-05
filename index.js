@@ -27,6 +27,12 @@ app.post("/api/users", (req, res) => {
   res.send(newUserToSave);
 });
 
+app.get("/api/users", async (req, res) => {
+  const allUsers = await User.find({});
+
+  res.send(allUsers);
+});
+
 app.post("/api/users/:_id/exercises", async (req, res) => {
   const body = req.body;
   const userId = req.params._id;
@@ -57,6 +63,36 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   };
 
   res.send(activityToDisplay);
+});
+
+app.get("/api/users/:_id/exercises", async (req, res) => {
+  const userId = req.params._id;
+  console.log(userId);
+
+  let foundUser = await User.findById(userId);
+  console.log(foundUser);
+  if (!foundUser) res.send({ error: "No user with this id" });
+
+  const foundActivities = await Exercise.find({ userId: userId });
+
+  if (foundActivities) {
+    const filteredArray = foundActivities.map((activity) => {
+      const formattedDate = new Date(activity.date).toDateString();
+      activity = { ...activity._doc, date: formattedDate };
+      return activity;
+    });
+
+    foundUser = {
+      ...foundUser._doc,
+      count: filteredArray.length,
+      log: filteredArray,
+    };
+    foundUser.log = foundActivities;
+
+    console.log(foundUser);
+
+    res.send(foundUser);
+  }
 });
 
 app.get("/api/users/:_id/logs", async (req, res) => {
