@@ -38,7 +38,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   const body = req.body;
   const userId = req.params._id;
   const date = body.date ? new Date(body.date) : new Date();
-  const duration = body.duration ? body.duration : 0;
+  const duration = body.duration ? +body.duration : 0;
   const user = await User.findById(userId);
 
   console.log(user);
