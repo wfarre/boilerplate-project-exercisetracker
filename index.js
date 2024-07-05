@@ -55,18 +55,18 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   newActivityToSave.save();
 
-  const activityToDisplay = {
-    username: user.username,
-    description: body.description,
-    duration: body.duration,
-    date: date.toDateString(),
-    _id: userId,
-  };
-
-  // const userWithNewActivity = {
-  //   ...user._doc,
-  //   ...newActivity,
+  // const activityToDisplay = {
+  //   username: user.username,
+  //   description: body.description,
+  //   duration: body.duration,
+  //   date: date.toDateString(),
+  //   _id: userId,
   // };
+
+  const userWithNewActivity = {
+    ...user._doc,
+    ...newActivity,
+  };
 
   res.send(activityToDisplay);
 });
@@ -93,9 +93,6 @@ app.get("/api/users/:_id/exercises", async (req, res) => {
       count: filteredArray.length,
       log: filteredArray,
     };
-    foundUser.log = foundActivities;
-
-    console.log(foundUser);
 
     res.send(foundUser);
   }
