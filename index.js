@@ -41,8 +41,6 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   const duration = body.duration ? +body.duration : 0;
   const user = await User.findById(userId);
 
-  console.log(user);
-
   if (!user) res.send({ error: "user not found" });
 
   const newActivity = {
@@ -64,22 +62,13 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     _id: userId,
   };
 
-  // const userWithNewActivity = {
-  //   ...user._doc,
-  //   description: newActivityToSave.description,
-  //   duration: +newActivityToSave.duration,
-  //   date: new Date(newActivityToSave.date).toDateString(),
-  // };
-
   res.send(activityToDisplay);
 });
 
 app.get("/api/users/:_id/exercises", async (req, res) => {
   const userId = req.params._id;
-  console.log(userId);
 
   let foundUser = await User.findById(userId);
-  console.log(foundUser);
   if (!foundUser) res.send({ error: "No user with this id" });
 
   const foundActivities = await Exercise.find({ userId: userId });
