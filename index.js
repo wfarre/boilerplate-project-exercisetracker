@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const User = require("./models/User");
 const Exercise = require("./models/Exercise");
+const ExerciseFactory = require("./Factories/ExerciseFactory");
 require("dotenv").config();
 
 mongoose.connect(process.env.MONGO_URI);
@@ -62,7 +63,12 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
     _id: userId,
   };
 
-  res.send(activityToDisplay);
+  const userWithNewActivity = {
+    ...user._doc,
+    newActivity: activityToDisplay,
+  };
+
+  res.send(userWithNewActivity);
 });
 
 app.get("/api/users/:_id/exercises", async (req, res) => {
@@ -102,7 +108,6 @@ app.get("/api/users/:_id/logs", async (req, res) => {
   const limit = req.query.limit;
 
   let foundUser = await User.findById(userId);
-  console.log(foundUser);
   if (!foundUser) res.send({ error: "No user with this id" });
 
   const foundActivities = await Exercise.find({ userId: userId });
@@ -114,12 +119,8 @@ app.get("/api/users/:_id/logs", async (req, res) => {
       const fromDate = new Date(from).getTime();
       const toDate = new Date(to).getTime();
 
-      console.log(fromDate);
-      console.log(activityDate);
-
       if (fromDate && fromDate > activityDate) isValid = false;
       if (toDate && toDate < activityDate) isValid = false;
-      console.log(isValid);
       return isValid;
     });
 
@@ -127,26 +128,23 @@ app.get("/api/users/:_id/logs", async (req, res) => {
 
     filteredArray = filteredArray.map((activity) => {
       const formattedDate = new Date(activity.date).toDateString();
-      activity = { ...activity._doc, date: formattedDate };
+      activity = {
+        description: activity.description,
+        duration: activity.duration,
+        date: formattedDate,
+      };
       return activity;
     });
 
-    console.log(filteredArray);
-    foundUser = {
-      ...foundUser._doc,
+    const userToDisplay = {
+      username: foundUser.username,
       count: filteredArray.length,
+      _id: userId,
       log: filteredArray,
     };
-    // foundUser.log = foundActivities;
 
-    console.log(foundUser);
-
-    res.send(foundUser);
+    res.send(userToDisplay);
   }
-
-  // console.log(foundActivities);
-
-  // foundUser.log = foundActivities;
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {
