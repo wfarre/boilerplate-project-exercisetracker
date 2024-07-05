@@ -56,22 +56,22 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   newActivityToSave.save();
 
-  // const activityToDisplay = {
-  //   username: newActivity.username,
-  //   description: body.description,
-  //   duration: duration,
-  //   date: date.toDateString(),
-  //   _id: userId,
-  // };
-
-  const userWithNewActivity = {
-    ...user._doc,
-    description: newActivityToSave.description,
-    duration: +newActivityToSave.duration,
-    date: new Date(newActivityToSave.date).toDateString(),
+  const activityToDisplay = {
+    username: newActivity.username,
+    description: body.description,
+    duration: duration,
+    date: date.toDateString(),
+    _id: userId,
   };
 
-  res.send(userWithNewActivity);
+  // const userWithNewActivity = {
+  //   ...user._doc,
+  //   description: newActivityToSave.description,
+  //   duration: +newActivityToSave.duration,
+  //   date: new Date(newActivityToSave.date).toDateString(),
+  // };
+
+  res.send(activityToDisplay);
 });
 
 app.get("/api/users/:_id/exercises", async (req, res) => {
