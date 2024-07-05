@@ -37,7 +37,7 @@ app.get("/api/users", async (req, res) => {
 app.post("/api/users/:_id/exercises", async (req, res) => {
   const body = req.body;
   const userId = req.params._id;
-  const date = new Date(body.date);
+  const date = body.date ? new Date(body.date) : new Date();
   const user = await User.findById(userId);
 
   console.log(user);
@@ -55,20 +55,20 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
 
   newActivityToSave.save();
 
-  // const activityToDisplay = {
-  //   username: user.username,
-  //   description: body.description,
-  //   duration: body.duration,
-  //   date: date.toDateString(),
-  //   _id: userId,
-  // };
-
-  const userWithNewActivity = {
-    ...user._doc,
-    ...activityToDisplay,
+  const activityToDisplay = {
+    username: user.username,
+    description: body.description,
+    duration: body.duration,
+    date: date.toDateString(),
+    _id: userId,
   };
 
-  res.send(userWithNewActivity);
+  // const userWithNewActivity = {
+  //   ...user._doc,
+  //   ...newActivity,
+  // };
+
+  res.send(activityToDisplay);
 });
 
 app.get("/api/users/:_id/exercises", async (req, res) => {
@@ -130,7 +130,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
       const formattedDate = new Date(activity.date).toDateString();
       activity = {
         description: activity.description,
-        duration: activity.duration,
+        duration: activity.duration ? activity.duration : 0,
         date: formattedDate,
       };
       return activity;
